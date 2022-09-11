@@ -30,16 +30,19 @@ int main(){
 	
 	cout << "Array Size? ";
 	cin >> size_of_array;
-	cout << "#Objects to be picked from array? ";
-	cin >> number_of_objects_to_be_picked;
-    s=number_of_objects_to_be_picked;
+	// cout << "#Objects to be picked from array? ";
+	// cin >> number_of_objects_to_be_picked;
+    // s=size_of_array;
 	
 	// I am just filling the array with integers... it could be a list of
 	// other objects, for example.
 	array = new int[size_of_array];
 	for (int i = 0; i < size_of_array; i++)
 		array[i] = i+1;
-    dfs(array,size_of_array,0,box);
+    for(s =0;s<=size_of_array;s++){
+        dfs(array,size_of_array,0,box);
+    }
+    
     system("pause");
     return 0;
 }
