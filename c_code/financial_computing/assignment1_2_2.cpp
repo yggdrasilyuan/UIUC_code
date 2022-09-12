@@ -41,8 +41,7 @@ int main(){
 		array[i] = i+1;
     for(s =0;s<=size_of_array;s++){
         dfs(array,size_of_array,0,box);
-    }
-    
+    }//output by order
     system("pause");
     return 0;
 }
