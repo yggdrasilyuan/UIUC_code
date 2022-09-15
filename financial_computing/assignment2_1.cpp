@@ -13,7 +13,7 @@ int main (int argc, char * const argv[])
     int board_size;
     cout<<"board size: ";
     cin>>board_size;
-    sscanf (argv[1], "%d", &board_size);// 传参
+    // sscanf (argv[1], "%d", &board_size);// 传参
 
 	x.nQueens(board_size);
 	system("pause");
