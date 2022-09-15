@@ -1,0 +1,19 @@
+
+# Question2
+
+```{R}
+library(ISLR)
+library(VGAM)
+
+n= nrow(Smarket)
+Smarket[c(1:3,(n-2):n),]
+
+```
+
+```{R}
+dates=read.csv("D:\\code\\R_code\\ISLRSmarketDates.csv",encoding="UTF-8",header=TRUE)
+sp=data.frame(dates,Smarket[,-1])
+n=nrow(sp)
+sp[c(1:3,(n-2):n),]
+
+```
