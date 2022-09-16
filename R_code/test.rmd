@@ -5,94 +5,88 @@
 library(ISLR)
 library(VGAM)
 
-n= nrow(Smarket)
-Smarket[c(1:3,(n-2):n),]
-
+n <- nrow(Smarket)
+Smarket[c(1:3, (n - 2):n), ]
 ```
 
 ```{R}
-dates=read.csv("D:\\code\\R_code\\ISLRSmarketDates.csv",encoding="UTF-8",header=TRUE)
-sp=data.frame(dates,Smarket[,-1])
-n=nrow(sp)
-sp[c(1:3,(n-2):n),]
-
+dates <- read.csv("C:\\vscode\\code\\UIUC_code\\R_code\\ISLRSmarketDates.csv", encoding = "UTF-8", header = TRUE)#C:\vscode\code\UIUC_code\R_code\ISLRSmarketDates.csv
+sp <- data.frame(dates, Smarket[, -1])
+n <- nrow(sp)
+sp[c(1:3, (n - 2):n), ]
 ```
 
 ```{r}
-hist(sp$Today,prob=TRUE,breaks=50)
+hist(sp$Today, prob = TRUE, breaks = 50)
 ```
 
 ```{r}
-hist(sp$Today,prob=TRUE,breaks=50)
-mean1=mean(sp$Today,na.rm=TRUE)
-rtoday=sd(sp$Today,na.rm = TRUE)
-curve(dnorm(x,mean1,rtoday),add=TRUE,col="red",lwd=2)
-
+hist(sp$Today, prob = TRUE, breaks = 50)
+mean1 <- mean(sp$Today, na.rm = TRUE)
+rtoday <- sd(sp$Today, na.rm = TRUE)
+curve(dnorm(x, mean1, rtoday), add = TRUE, col = "red", lwd = 2)
 ```
 
 ```{r}
-hist(sp$Today,prob=TRUE,breaks=50)
-mu=mean(sp$Today,na.rm=TRUE)
-b=sd(sp$Today,na.rm = TRUE)/sqrt(2) 
-curve(dlaplace(x,mu,b),add=TRUE,col="red",lwd=2)
-
+hist(sp$Today, prob = TRUE, breaks = 50)
+mu <- mean(sp$Today, na.rm = TRUE)
+b <- sd(sp$Today, na.rm = TRUE) / sqrt(2)
+curve(dlaplace(x, mu, b), add = TRUE, col = "red", lwd = 2)
 ```
 
 ```{r}
-hist(sp$Today,prob=TRUE,breaks=50)
-lines(density(sp$Today,bw=bw.nrd0(sp$Today)/4,na.rm=TRUE),col="blue",lwd=2)
-lines(density(sp$Today,bw=bw.nrd0(sp$Today)*4,na.rm=TRUE),col="red",lwd=2)
-
+hist(sp$Today, prob = TRUE, breaks = 50)
+lines(density(sp$Today, bw = bw.nrd0(sp$Today) / 4, na.rm = TRUE), col = "blue", lwd = 2)
+lines(density(sp$Today, bw = bw.nrd0(sp$Today) * 4, na.rm = TRUE), col = "red", lwd = 2)
 ```
 
 ```{r}
 boxplot(sp$Today)
-m=min(sp$Today,na.rm = TRUE)
-subset(sp,Today==m)
+m <- min(sp$Today, na.rm = TRUE)
+subset(sp, Today == m)
 ```
 
 ```{r}
-cor(sp[,2:8])
+cor(sp[, 2:8])
 ```
 
 ```{r}
-pairs(sp[,2:8])
+pairs(sp[, 2:8])
 ```
 
 ```{r}
 library(xts)
 
-d<-as.Date(sp$Date,"%m/%d/%Y")
-index_ts<-xts(sp,order.by = d)
+d <- as.Date(sp$Date, "%m/%d/%Y")
+index_ts <- xts(sp, order.by = d)
 # head(index_ts)
-plot(ts(index_ts[,"Volume"]))
+plot(ts(index_ts[, "Volume"]))
 # autoplot.zoo(index_ts[,"Volume"])
 # class(index_ts$Volume)
 ```
 
 ```{r}
 
-sp$Date=as.Date(sp$Date,"%m/%d/%Y")
+sp$Date <- as.Date(sp$Date, "%m/%d/%Y")
 # index_ts<-as.xts(sp,order.by = d)
 head(index_ts)
-plot(sp$Date,sp$Volume,type="l",xlab="time",ylab="volume")
+plot(sp$Date, sp$Volume, type = "l", xlab = "time", ylab = "volume")
 # autoplot(index_ts$Volume)
-
 ```
 
 ```{r}
-par(mfrow=c(2,1))
-hist(sp$Today,prob=TRUE,breaks=50)
-mean1=mean(sp$Today,na.rm=TRUE)
-rtoday=sd(sp$Today,na.rm = TRUE)
-curve(dnorm(x,mean1,rtoday),add=TRUE,col="red",lwd=2)
+par(mfrow = c(2, 1))
+hist(sp$Today, prob = TRUE, breaks = 50)
+mean1 <- mean(sp$Today, na.rm = TRUE)
+rtoday <- sd(sp$Today, na.rm = TRUE)
+curve(dnorm(x, mean1, rtoday), add = TRUE, col = "red", lwd = 2)
 
-hist(sp$Today,prob=TRUE,breaks=50)
-mu=mean(sp$Today,na.rm=TRUE)
-b=sd(sp$Today,na.rm = TRUE)/sqrt(2) 
-curve(dlaplace(x,mu,b),add=TRUE,col="blue",lwd=2)
+hist(sp$Today, prob = TRUE, breaks = 50)
+mu <- mean(sp$Today, na.rm = TRUE)
+b <- sd(sp$Today, na.rm = TRUE) / sqrt(2)
+curve(dlaplace(x, mu, b), add = TRUE, col = "blue", lwd = 2)
 
 library(moments)
-skewness(sp$Today,na.rm = TRUE)
-kurtosis(sp$Today,na.rm = TRUE)
+skewness(sp$Today, na.rm = TRUE)
+kurtosis(sp$Today, na.rm = TRUE)
 ```
