@@ -54,18 +54,24 @@ class Board
         if(col==n){
             // res.add(chsToList(chs));
 			num++;
-			if(num==1){
-				for(int i=0;i<n;i++){
-					cout<<"   ";
-					for(int j=0;j<n;j++){
-					
-						cout<<chess_board[i][j]<<" ";
-					}
-					cout<<endl;
-				}
+            cout<<size<<"x"<<size<<" solution #: "<< num<<endl;
+            for(int flag=0; flag<n;flag++){
+			    cout<<"----";
 			}
-
-            return;
+			cout<<endl;
+			for(int i=0;i<n;i++){
+				cout<<"   ";
+				for(int j=0;j<n;j++){
+					
+					cout<<chess_board[i][j]<<" ";
+				}
+				cout<<endl;
+			}
+            for(int flag=0; flag<n;flag++){
+			    cout<<"----";
+			}
+			cout<<endl;cout<<endl;
+           return;
         }
         //一列一列地摆放，在确定一列中的那个皇后应该摆在哪一列时，需要当前列是否合法。
         //如果合法，则将皇后放置在当前位置，并进行递归，回溯。
@@ -78,7 +84,6 @@ class Board
                 chess_board[row][col]='-';
             }
         }
-
 	}
 
 	
@@ -94,22 +99,17 @@ class Board
 public:
 	// Solves the n-Queens problem by (recursive) backtracking
     int chess_size;
-	int num=0;
+    int num=0;
 	void nQueens(int n)
 	{
 		initialize(n);
 		// chess_size
 		if (n>3){
 			cout << size << "-Queens Problem Solution" << endl;
-			for(int flag=0; flag<n;flag++){
-			cout<<"----";
-			}
-			cout<<endl;
+			
 			print_board(*chess_board,0,n);
-			for(int flag=0; flag<n;flag++){
-			cout<<"----";
-			}
-			cout<<endl;
+			
+            cout<<"There are "<<num<<" different solutions to the "<< size<<"-Queens Problem"<<endl;
 		}else 
 			cout << "There is no solution to the " << n << "-Queens Problem" << endl;
 	}
