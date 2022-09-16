@@ -5,15 +5,23 @@
 library(ISLR)
 library(VGAM)
 
-n= nrow(Smarket)
-Smarket[c(1:3,(n-2):n),]
-
 ```
 
 ```{R}
-dates=read.csv("D:\\code\\R_code\\ISLRSmarketDates.csv",encoding="UTF-8",header=TRUE)
-sp=data.frame(dates,Smarket[,-1])
-n=nrow(sp)
-sp[c(1:3,(n-2):n),]
+data=read.csv("D:\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
+log_TSLA=log(data$TSLA)
+log_return=diff(log_TSLA,lag=1)
+
+qqnorm(log_return)
+qqline(log_return)
+```
+
+
+```{r}
+sd_return=sd(log_return)
+annul_return=sd_return*sqrt(252)
+annul_return
+true_mean=mean(log_return)
+true_mean
 
 ```
