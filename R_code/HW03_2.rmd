@@ -25,3 +25,15 @@ true_mean=mean(log_return)
 true_mean
 
 ```
+
+```{r}
+len=length(log_return)
+xbar=true_mean
+sigmahat=sd(log_return)
+z=qnorm(1-0.025)
+l=xbar-z*sigmahat/sqrt(len)
+u=xbar+z*sigmahat/sqrt(len)
+mylist=list("mean"=xbar,"lb"=l,"ub"=u)
+mylist
+
+```
