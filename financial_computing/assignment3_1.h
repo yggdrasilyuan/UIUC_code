@@ -5,6 +5,7 @@
 #include <fstream>
 #include<iostream>
 #include <tuple>
+#include <cstring>
 
 using std::vector;
 using namespace std;
@@ -41,18 +42,31 @@ class Sudoku
         return true;
     }
 
-    bool check_diagonals_valid(){
-        int count1=0;
-        int count2=0;
-        for(int i=0;i<9;i++)
-        {
-            count1=count1+puzzle[i][i];
-            count2=count2+puzzle[i][8-i];
+    bool check_diagonals_valid(int row,int col){
+        static bool vis[16];
+
+        int diaID = row + col;
+        memset(vis,0,sizeof(vis));
+        for(int i=0;i<9;i++){
+            int x = i,y = diaID-i;
+            if(y < 0 || y >= 9)continue;
+            int c = puzzle[x][y];
+            if(c == 0)continue;
+            if(vis[c])return false;
+            vis[c] = 1;
         }
-        if(count1==45&&count2==45)
+        if(row != col)return true;
+        else{
+            memset(vis,0,sizeof(vis));
+            for(int i=0;i<9;i++){
+                int c = puzzle[i][i];
+                // cout << i << ": " << puzzle[i][i] << endl;
+                if(c == 0)continue;
+                if(vis[c])return false;
+                vis[c] = 1;
+            }
             return true;
-        else
-            return false;
+        }
     }
     
     
@@ -65,6 +79,20 @@ class Sudoku
     
     std::tuple<bool, int> positive_diagonals_valid()
     {
+        static bool vis[16];
+        for(int dia=0;dia<=16;dia++){
+            memset(vis,0,sizeof(vis));
+            for(int i=0;i<9;i++){
+                int x = i,y = dia-i;
+                if(y < 0 || y >= 9)continue;
+                int c = puzzle[x][y];
+                if(c == 0)continue;
+                if(vis[c])return make_tuple(false,c);
+                vis[c] = 1;
+            }
+        }
+
+        return make_tuple(true, -1);
         // write code that checks if there are any repeated
         // digits along the 15-many positive diagonals
         // If the intial puzzle does not meet this requirement,
@@ -83,8 +111,15 @@ class Sudoku
     // Private member funtion that checks if adjacent cells
     // (along the positive diagonal) touching at a corner
     // have a difference of atleast 4
-    std::tuple<bool, int, int> adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4()
+    std::tuple<bool, int, int> adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4(int i,int j)
     {
+        // return make_tuple(true,-1,-1);
+        if(i-1 < 0 || j+1 >= 9)
+            return make_tuple(true,-1,-1);
+        // cout << puzzle[i-1][j+1] << " " << puzzle[i][j] << endl;
+        if(abs(puzzle[i-1][j+1]-puzzle[i][j])<=3)
+            return make_tuple(false,i,j);
+        else make_tuple(true,-1,-1);
         // write code that checks if all non-zero entries in the
         // puzzle (filled so far) have met the "minimum-difference
         // of 4" rule.
@@ -155,29 +190,23 @@ public:
   
         int nextrow=(n+1)/9; int nextcol=(n+1)%9;
         if(n>80){
-            flag=true;
             count++;
-            // print_puzzle();
+            print_puzzle();
             return true;
         }
         if(puzzle[n/9][n%9]!=0){
             Solve(nextrow,nextcol);
         }
         else{
-            for(int k=1; k<=9; k++){
-                if(Check(n,k)==true)
-                {
+            for(int k=1; k<=9; k++)
+                if(Check(n,k)==true){
                     puzzle[n/9][n%9]=k;
-                    Solve(nextrow,nextcol);
-                    if(flag==true){
-                        print_puzzle();
-                        count++;
-                        cout<<"number:"<<count<<endl;
-                        return true;
-                    }else
-                    puzzle[n/9][n%9]=0;
+                    if(check_diagonals_valid(row,col) && 
+                        get<0>(adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4(row,col)))
+                    {Solve(nextrow,nextcol);}
+                    else
+                        puzzle[n/9][n%9]=0;
                 }
-            }
         }
 
         // use the pseudo code of figure 3 of the description
