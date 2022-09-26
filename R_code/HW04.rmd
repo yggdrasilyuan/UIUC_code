@@ -20,27 +20,29 @@ sigmat
 
 
 ```{R}
-c=exp(-r*T)*exp(mu+0.5*sigmat^2)*pnorm((mu+sigmat^2-log(K))/sigmat)-K*pnorm((mu-log(K))/sigmat)
+c=exp(-r*T)*(exp(mu+0.5*sigmat^2)*pnorm((mu+sigmat^2-log(K))/sigmat)-K*pnorm((mu-log(K))/sigmat))
 c
 ```
 
 ```{R}
 n=10000
-z=z1=rnorm(n);
+z=rnorm(n)
+z1=rnorm(n)
 z2=rho*z1+sqrt(1-rho^2)*z
 s1t=s10*exp((r-q1-0.5*sigma1^2)*T+sigma1*sqrt(T)*z1)
 s2t=s20*exp((r-q2-0.5*sigma2^2)*T+sigma2*sqrt(T)*z2)
 y=s1t+s2t-K
 y[y<0]=0
-
 x=exp(-r*T)*y
+# x
 m=mean(x);sd=sd(x)
 sd
 ```
 
 ```{R}
 n=40000
-z=z1=rnorm(n);
+z=rnorm(n)
+z1=rnorm(n);
 z2=rho*z1+sqrt(1-rho^2)*z
 s1t=s10*exp((r-q1-0.5*sigma1^2)*T+sigma1*sqrt(T)*z1)
 s2t=s20*exp((r-q2-0.5*sigma2^2)*T+sigma2*sqrt(T)*z2)
@@ -52,9 +54,16 @@ m=mean(x);sd=sd(x)
 sd
 ```
 
+```{r}
+n=40960000
+samplese=sd/sqrt(n)
+samplese
+```
+
 ```{R}
 n=40960000
-z=z1=rnorm(n);
+z=rnorm(n)
+z1=rnorm(n);
 z2=rho*z1+sqrt(1-rho^2)*z
 s1t=s10*exp((r-q1-0.5*sigma1^2)*T+sigma1*sqrt(T)*z1)
 s2t=s20*exp((r-q2-0.5*sigma2^2)*T+sigma2*sqrt(T)*z2)
@@ -77,7 +86,8 @@ ub
 
 ```{R}
 n=40960000
-z=z1=rnorm(n);
+z=rnorm(n)
+z1=rnorm(n)
 z2=rho*z1+sqrt(1-rho^2)*z
 s1t=s10*exp((r-q1-0.5*sigma1^2)*T+sigma1*sqrt(T)*z1)
 s2t=s20*exp((r-q2-0.5*sigma2^2)*T+sigma2*sqrt(T)*z2)

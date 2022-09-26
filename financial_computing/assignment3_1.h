@@ -13,21 +13,46 @@ class Sudoku
 	// Private
 	int puzzle[9][9];
 	
-    bool row_valid(int row)
+    bool Check(int n, int key)//judge row/col/3*3
     {
-        // write code that checks if "row" is valid
-    }
+        for (int i = 0; i < 9; i++)//judge row
+        {
+            int j = n / 9;//j=row
+            if (puzzle[j][i] == key) return false;
+        }
     
-    // Private member function that checks if the named column is valid
-    bool col_valid(int col)
-    {
-        // check validity of "col"
+        for (int i = 0; i < 9; i++)//judge col
+        {
+            int j = n % 9;//j==col
+            if (puzzle[i][j] == key) return false;
+        }
+        /* x为n所在的小九宫格左顶点竖坐标 */
+        int x = (n / 9) / 3 * 3;
+        /* y为n所在的小九宫格左顶点横坐标 */
+        int y = (n % 9) / 3 * 3;
+        /* 判断n所在的小九宫格是否合法 */
+        for (int i = x; i < x + 3; i++)
+        {
+            for (int j = y; j < y + 3; j++)
+            {
+                if (puzzle[i][j] == key) return false;
+            }
+        }
+        return true;
     }
-    
-    // Private member function that checks if the named 3x3 block is valid
-    bool block_valid(int row, int col)
-    {
-        // check 3 x 3 block validity
+
+    bool check_diagonals_valid(){
+        int count1=0;
+        int count2=0;
+        for(int i=0;i<9;i++)
+        {
+            count1=count1+puzzle[i][i];
+            count2=count2+puzzle[i][8-i];
+        }
+        if(count1==45&&count2==45)
+            return true;
+        else
+            return false;
     }
     
     
@@ -75,9 +100,20 @@ public:
 	// Public member function that reads the incomplete puzzle
 	// we are not doing any checks on the input puzzle -- that is,
 	// we are assuming they are indeed valid
-    void read_puzzle(int argc, char * const argv[])
-    {
 
+    bool flag=false;
+    int count=0;
+    void read_puzzle(int argc, char * const argv[])
+    {   
+        int data;
+        int flag=0;
+        ifstream input_file(argv[1]);
+        if(input_file.is_open()){
+            while(input_file>>data){
+                puzzle[flag/9][flag%9]=data;
+                flag++;
+            }
+        }
         
         // write code that reads the input puzzle using the
         // guidelines of figure 23 of the bootcamp material
@@ -100,7 +136,7 @@ public:
 				}
 				else {
 					// printing initial value of the puzzle with some formatting
-					cout << "X ";
+					cout << "0 ";
 				}
 			}
 			cout << endl;
@@ -115,7 +151,35 @@ public:
         // first incomplete (i.e. 0) entry in the puzzle.  If the puzzle has
         // no zeros, the variable row will be 9 => the puzzle is done, as
         // each entry is row-, col- and block-valid...
-        
+        int n= 9*row+col;
+  
+        int nextrow=(n+1)/9; int nextcol=(n+1)%9;
+        if(n>80){
+            flag=true;
+            count++;
+            // print_puzzle();
+            return true;
+        }
+        if(puzzle[n/9][n%9]!=0){
+            Solve(nextrow,nextcol);
+        }
+        else{
+            for(int k=1; k<=9; k++){
+                if(Check(n,k)==true)
+                {
+                    puzzle[n/9][n%9]=k;
+                    Solve(nextrow,nextcol);
+                    if(flag==true){
+                        print_puzzle();
+                        count++;
+                        cout<<"number:"<<count<<endl;
+                        return true;
+                    }else
+                    puzzle[n/9][n%9]=0;
+                }
+            }
+        }
+
         // use the pseudo code of figure 3 of the description
     }
 };
