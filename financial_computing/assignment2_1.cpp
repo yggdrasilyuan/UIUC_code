@@ -1,6 +1,6 @@
 #include <iostream>
 #include "assignment2_1.h"
-#include<bits/stdc++.h>
+
 #include<String>
 using namespace std;
 

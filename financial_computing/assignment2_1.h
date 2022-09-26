@@ -1,7 +1,9 @@
 #ifndef N_queens
 #define N_queens
 #include<iostream>
-#include<bits/stdc++.h>
+// #include<bits/stdc++.h>、
+#include<vector>
+
 using namespace std;
 
 class Board
