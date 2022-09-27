@@ -44,7 +44,6 @@ class Sudoku
 
     bool check_diagonals_valid(int row,int col){
         static bool vis[16];
-
         int diaID = row + col;
         memset(vis,0,sizeof(vis));
         for(int i=0;i<9;i++){
@@ -52,21 +51,11 @@ class Sudoku
             if(y < 0 || y >= 9)continue;
             int c = puzzle[x][y];
             if(c == 0)continue;
+            // cout << x << " " << y << ": " << c << endl;
             if(vis[c])return false;
             vis[c] = 1;
         }
-        if(row != col)return true;
-        else{
-            memset(vis,0,sizeof(vis));
-            for(int i=0;i<9;i++){
-                int c = puzzle[i][i];
-                // cout << i << ": " << puzzle[i][i] << endl;
-                if(c == 0)continue;
-                if(vis[c])return false;
-                vis[c] = 1;
-            }
-            return true;
-        }
+        return true;
     }
     
     
@@ -113,13 +102,21 @@ class Sudoku
     // have a difference of atleast 4
     std::tuple<bool, int, int> adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4(int i,int j)
     {
+        // if(cddCheck()){
+        //     cout << "!! adjacent_cells" << endl;
+        //     cout << i << " " << j <<": " << puzzle[i][j]<< endl;
+        //     cout << i-1 << " " << j+1 <<": " << puzzle[i-1][j+1]<< endl;
+        //     cout << "res: " << abs(puzzle[i-1][j+1]-puzzle[i][j]) << endl;
+        // }
         // return make_tuple(true,-1,-1);
         if(i-1 < 0 || j+1 >= 9)
             return make_tuple(true,-1,-1);
         // cout << puzzle[i-1][j+1] << " " << puzzle[i][j] << endl;
-        if(abs(puzzle[i-1][j+1]-puzzle[i][j])<=3)
+        if(abs(puzzle[i-1][j+1]-puzzle[i][j])<=3){
+            // if(cddCheck())cout << "*" << puzzle[i-1][j+1] << " " << puzzle[i][j] << " " << abs(puzzle[i-1][j+1]-puzzle[i][j]) << endl;
             return make_tuple(false,i,j);
-        else make_tuple(true,-1,-1);
+        }
+        else return make_tuple(true,-1,-1);
         // write code that checks if all non-zero entries in the
         // puzzle (filled so far) have met the "minimum-difference
         // of 4" rule.
@@ -177,11 +174,28 @@ public:
 			cout << endl;
 		}
 	}
-    
+    // bool cddCheck(){
+    //     if(puzzle[0][0] != 5)return 0;
+    //     if(puzzle[0][1] != 6)return 0;
+    //     if(puzzle[0][2] != 3)return 0;
+    //     if(puzzle[0][3] != 9)return 0;
+    //     if(puzzle[0][4] != 1)return 0;
+    //     if(puzzle[0][5] != 4)return 0;
+    //     if(puzzle[0][6] != 7)return 0;
+    //     if(puzzle[0][7] != 8)return 0;
+    //     if(puzzle[0][8] != 2)return 0;
+    //     if(puzzle[1][0] != 1)return 0;
+    //     // cout << "->" << puzzle[1][0] << endl;
+    //     // if(puzzle[1][0] != 3)return 0;
+    //     // if(puzzle[1][1] != 9)return 0;
+    //     return 1;
+    // }
     // Public member function that (recursively) implements the brute-force
     // search for possible solutions to the incomplete Sudoku puzzle
     bool Solve(int row, int col)
     {
+
+        // if(cddCheck())print_puzzle();
         // this part of the code identifies the row and col number of the
         // first incomplete (i.e. 0) entry in the puzzle.  If the puzzle has
         // no zeros, the variable row will be 9 => the puzzle is done, as
@@ -196,17 +210,41 @@ public:
         }
         if(puzzle[n/9][n%9]!=0){
             Solve(nextrow,nextcol);
+
+            // if(get<0>(adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4(row,col)) && check_diagonals_valid(row,col)){
+                
+            //     int tmp = puzzle[row][col];
+            //     puzzle[row][col] = 0;
+            //     if(Check(n,tmp) == true){
+            //         cout << row << " " << col << " check ok" << endl;
+            //         puzzle[row][col] = tmp;
+            //         Solve(nextrow,nextcol);
+            //     }
+            //     else{
+            //         cout << row << " " << col << " check bad" << endl;
+            //     }
+            // }
+            // else{
+            //     cout << row << " " << col << " bad" << endl;
+            //     print_puzzle();
+            // } 
         }
         else{
-            for(int k=1; k<=9; k++)
+            // cout << "!!!" << row << " " << col << endl;
+            for(int k=1; k<=9; k++){
                 if(Check(n,k)==true){
+                    // if(cddCheck())cout << "->" << k << endl;
                     puzzle[n/9][n%9]=k;
                     if(check_diagonals_valid(row,col) && 
                         get<0>(adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4(row,col)))
-                    {Solve(nextrow,nextcol);}
-                    else
-                        puzzle[n/9][n%9]=0;
+                        {   
+                            // if(cddCheck())cout << "-->" << k << endl;
+                            Solve(nextrow,nextcol);
+                        }
+                    puzzle[n/9][n%9]=0;
                 }
+            }
+                
         }
 
         // use the pseudo code of figure 3 of the description
