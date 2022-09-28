@@ -168,7 +168,7 @@ public:
 				}
 				else {
 					// printing initial value of the puzzle with some formatting
-					cout << "0 ";
+					cout << "x ";
 				}
 			}
 			cout << endl;
@@ -192,6 +192,23 @@ public:
     // }
     // Public member function that (recursively) implements the brute-force
     // search for possible solutions to the incomplete Sudoku puzzle
+    void init_check_diagonals(){
+        if(!get<0>(positive_diagonals_valid())){
+            cout<<"Partially-Filled Sudoku Puzzle does not meet Dutch Miracle requirements...Quiting!"<<endl;
+            cout<<"The number "<<get<1>(positive_diagonals_valid())<<" appears multiple times along the positive diagonals."<<endl;
+        }
+        
+    }
+    void init_check_min(){
+        for(int i=0;i<81;i++){
+            if(!get<0>(adjacent_cells_along_positive_diagonals_have_at_least_a_difference_of_4(i/9,i%9))&&puzzle[i/9][i%9]!=0&&puzzle[i/9-1][i%9+1]!=0){
+                cout<<"puzzle["<<i/9<<"]["<<i%9<<"]= "<<puzzle[i/9][i%9]<<" ,puzzle["
+                <<i/9-1<<"]["<<i%9+1<<"]= "<<puzzle[i/9-1][i%9+1]<<" , and they do not meet the minimum-difference of 4"<<endl;
+                break;
+            }
+        }
+    }
+
     bool Solve(int row, int col)
     {
 
@@ -205,7 +222,9 @@ public:
         int nextrow=(n+1)/9; int nextcol=(n+1)%9;
         if(n>80){
             count++;
+            cout<<"Solution #"<<count;
             print_puzzle();
+            cout<<endl;
             return true;
         }
         if(puzzle[n/9][n%9]!=0){
