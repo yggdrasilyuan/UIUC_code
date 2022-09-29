@@ -222,11 +222,9 @@ public:
         int nextrow=(n+1)/9; int nextcol=(n+1)%9;
         if(n>80){
             count++;
-            // cout<<"Solution #"<<count;
-            if(count==1){
-                print_puzzle();
-                cout<<endl;
-            }
+            cout<<"Solution #"<<count;
+            print_puzzle();
+            cout<<endl;
             return true;
         }
         if(puzzle[n/9][n%9]!=0){
