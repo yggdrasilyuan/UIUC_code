@@ -1,0 +1,57 @@
+
+```{R}
+data=read.csv("D:\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
+log_ZM=log(data$ZM)
+log_return=diff(log_ZM,lag=1)
+Fhat=ecdf(log_return)
+plot(Fhat,verticals=TRUE,do.points=FALSE)
+```
+
+## question2 compute sample kurtosis
+```{r}
+library(moments)
+
+kurtosis(log_return,na.rm=TRUE)
+```
+
+
+## question3 resampling
+```{R}
+B=5000
+n=length(log_return)
+sample_medians=rep(0,B)
+sample_means=rep(0,B)
+sample_kurtosis=rep(0,B)
+for(b in 1:B){
+    xstar=sample(log_return,n,replace=TRUE)
+    sample_medians[b]=median(xstar)
+    sample_means[b]=mean(xstar)
+    sample_kurtosis[b]=kurtosis(xstar)
+}
+hist(sample_kurtosis)
+```
+
+## question4 standard error
+```{R}
+library(plotrix)
+std.error(sample_kurtosis)
+sd=sd(sample_kurtosis)
+sd
+stderror=sd/sqrt(length(sample_kurtosis))
+stderror
+```
+
+## question5 probability
+```{r}
+sample_7=sample_kurtosis[sample_kurtosis>=7]
+probability=length(sample_7)/length(sample_kurtosis)
+probability
+```
+
+## question6 95% confidence interval
+```{r}
+qu=quantile(sample_kurtosis,probs=0.975)
+ql=quantile(sample_kurtosis,probs=0.025)
+qu
+ql
+```
