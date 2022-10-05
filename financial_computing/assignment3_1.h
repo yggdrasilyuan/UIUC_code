@@ -21,18 +21,14 @@ class Sudoku
             int j = n / 9;//j=row
             if (puzzle[j][i] == key) return false;
         }
-    
         for (int i = 0; i < 9; i++)//judge col
         {
             int j = n % 9;//j==col
             if (puzzle[i][j] == key) return false;
         }
-        /* x为n所在的小九宫格左顶点竖坐标 */
-        int x = (n / 9) / 3 * 3;
-        /* y为n所在的小九宫格左顶点横坐标 */
-        int y = (n % 9) / 3 * 3;
-        /* 判断n所在的小九宫格是否合法 */
-        for (int i = x; i < x + 3; i++)
+        int x = (n / 9) / 3 * 3;//This is the start row number of 3*3 puzzle
+        int y = (n % 9) / 3 * 3;//this is the col number
+        for (int i = x; i < x + 3; i++)//check 3*3 puzzle
         {
             for (int j = y; j < y + 3; j++)
             {
