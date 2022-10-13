@@ -126,7 +126,8 @@ class  stable_marriage_instance
             match_for_men = vector<int>(no_of_couples, -1);
             match_for_women = vector<int>(no_of_couples, -1);
 
-            cout << "Number of couples = " << no_of_couples << endl;
+            cout<<"Gale-Shapley Algorithm"<<endl<<"Input File Name: "<<argv[1]<<endl;
+            cout << "Number of couples = " << no_of_couples << endl<<endl;
             cout << "Preferences of Men" << endl << "------------------" << endl;
             for (int i = 0; i < no_of_couples; i++)
             {
