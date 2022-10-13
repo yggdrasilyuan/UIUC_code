@@ -1,4 +1,35 @@
 
+## question2.1
+```{R}
+exp_data=read.csv("D:\\code\\UIUC_code\\R_code\\exp.csv",encoding="UTF-8",header=TRUE)
+mean_e=mean(exp_data$sample)
+lamda_hat=1/mean_e
+theta=1/lamda_hat
+theta
+```
+## question2.2
+```{r}
+var_s=var(exp_data$sample)
+fisherinfor=length(exp_data$sample)*var_s
+fisherinfor
+# ese=1/sqrt(fisherinfor)
+ese=lamda_hat/sqrt(nrow(exp_data))
+ese
+```
+
+```{r}
+lb=lamda_hat-qnorm(0.975)*ese
+ub=lamda_hat+qnorm(0.975)*ese
+
+lb
+ub
+
+```
+
+
+
+
+## 3.question1
 ```{R}
 data=read.csv("D:\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
 log_ZM=log(data$ZM)
@@ -11,7 +42,8 @@ plot(Fhat,verticals=TRUE,do.points=FALSE)
 ```{r}
 library(moments)
 
-kurtosis(log_return,na.rm=TRUE)
+kurt=kurtosis(log_return,na.rm=TRUE)
+kurt
 ```
 
 
@@ -52,6 +84,9 @@ probability
 ```{r}
 qu=quantile(sample_kurtosis,probs=0.975)
 ql=quantile(sample_kurtosis,probs=0.025)
-qu
-ql
+
+lowb=2*kurt-qu
+upperb=2*kurt-ql
+lowb
+upperb
 ```

@@ -1,0 +1,61 @@
+## question1
+```{r}
+data=read.csv("D:\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
+library(randtests)
+lenth=nrow(data)
+zm=data$ZM
+rZM=log(zm[2:lenth]/zm[1:(lenth-1)])
+
+tsla=data$TSLA
+rTSLA=log(tsla[2:lenth]/tsla[1:(lenth-1)])
+
+di=rZM-rTSLA
+runs.test(di,alternative="two.sided",threshold=median(di),pvalue="normal",plot=FALSE)
+runs.test(rZM,alternative="two.sided",threshold=median(rZM),pvalue="normal",plot=FALSE)
+length(rZM)
+```
+
+## question2
+```{r}
+library(moments)
+
+shapiro.test(rZM)
+jarque.test(rZM)
+```
+
+## question3
+```{r}
+qqnorm(rZM)
+qqline(rZM)
+```
+
+## question6
+```{r}
+alpha=0.05
+zscore=qnorm(1-alpha/2)
+D=rZM-rTSLA
+n=length(D)
+mu0=0
+se=sd(D)/sqrt(n)
+z0=(mean(D)-mu0)/se
+se
+se*zscore
+z0
+zscore
+isTRUE(abs(z0)>zscore)
+```
+
+## question7
+```{r}
+library(BSDA)
+ub=mean(D)-qnorm(alpha)*se
+ub
+z.test(x=D,alternative="less",mu=0,sigma.x=sd(D),conf.level=0.95)
+```
+
+## question8
+```{r}
+p_value=pnorm(-abs(mean(D)/se))
+p_value
+
+```
