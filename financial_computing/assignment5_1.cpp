@@ -30,26 +30,22 @@ class  stable_marriage_instance
     bool rank_check (int num, int index1, int index2)
     {
         // fill the necessary code for this function
-        int rank_of_current = 0, rank_of_chasing = 0;
+        int before = 0, now = 0;
         for (int i = 0; i < no_of_couples; i++)
         {
             if (Preference_of_women[num][i] == index1)
             {
-                rank_of_current = i;
+                before = i;
             }
             if (Preference_of_women[num][i] == index2)
             {
-                rank_of_chasing = i;
+                now = i;
             }
         }
-        if (rank_of_current < rank_of_chasing)
-        {
+        if (before < now)
             return false;
-        }
         else
-        {
             return true;
-        }
     }
     
     // private member function: implements the Gale-Shapley algorithm
@@ -57,9 +53,8 @@ class  stable_marriage_instance
     {
         vector <bool> is_man_free;
         vector <bool> is_woman_free;
-        vector <vector <bool> > has_this_man_proposed_to_this_woman;
         
-        int man_index, perferLady;
+        int man_index;
         // cout<<"<--"<<endl;
         int man_start_index[no_of_couples];
         // cout<<"true"<<endl;
@@ -80,23 +75,23 @@ class  stable_marriage_instance
             {
                 if (is_man_free[i] == true)
                 {
-                    int boy_chase = Preference_of_men[i][man_start_index[i]];
-                    int boy_chase_bf = match_for_women[boy_chase];
-                    if (boy_chase_bf != -1)
+                    int man_choice = Preference_of_men[i][man_start_index[i]];
+                    int man_choice_bf = match_for_women[man_choice];
+                    if (man_choice_bf != -1)
                     {
-                        if (rank_check(boy_chase, boy_chase_bf, i))
+                        if (rank_check(man_choice, man_choice_bf, i))
                         {
-                            match_for_men[boy_chase_bf] = -1;
-                            match_for_men[i] = boy_chase;
-                            match_for_women[boy_chase] = i;
+                            match_for_men[man_choice_bf] = -1;
+                            match_for_men[i] = man_choice;
+                            match_for_women[man_choice] = i;
                             is_man_free[i] = false;
-                            is_man_free[boy_chase_bf] = true;
+                            is_man_free[man_choice_bf] = true;
                         }
                     }
                     else
                     {
-                        match_for_men[i] = boy_chase;
-                        match_for_women[boy_chase] = i;
+                        match_for_men[i] = man_choice;
+                        match_for_women[man_choice] = i;
                         is_man_free[i] = false;
                     }
                     man_start_index[i]++;
