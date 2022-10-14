@@ -1,0 +1,100 @@
+## HW07
+## Question 1
+```{r}
+library(moments)
+data=read.csv("D:\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
+m=nrow(data)
+zm=data$ZM
+lenth=length(zm)
+rZM=log(zm[2:lenth]/zm[1:(lenth-1)])
+t=1/252
+mu=mean(rZM)/t
+n=length(rZM)
+sigma=sqrt((n-1)/n)*sd(rZM)/sqrt(t)
+loglikelihoodBSM=-n*log(2*pi*sigma^2*t)/2-(n-1)*sd(rZM)^2/(2*sigma^2*t)
+mu
+sigma
+loglikelihoodBSM
+```
+## question2
+```{r}
+#NIG: theta[1]=alpha, theta[2]=beta, theta[3]=delta,
+# theta[4]=mu
+t1=proc.time()
+initialvalueNIG=c(10,0,2,0)
+NIG=function(x,theta){theta[1]*theta[3]*t/pi*
+besselK(theta[1]*sqrt(theta[3]^2*t^2
++(x-theta[4]*t)^2),1)/
+(sqrt(theta[3]^2*t^2+(x-theta[4]*t)^2))*
+exp(theta[3]*sqrt(theta[1]^2-theta[2]^2)*t+
+theta[2]*(x-theta[4]*t))}
+resultNIG=optim(initialvalueNIG,fn=function(theta)
+{-sum(log(NIG(rZM,theta)))},method="L-BFGS-B")
+resultNIG
+t2=proc.time()
+```
+
+## question3
+```{r}
+t3=proc.time()
+m=mean(rZM)
+v=(sd(rZM))^2
+s=skewness(rZM)
+k=kurtosis(rZM)
+m
+v
+s
+k
+```
+
+## question4
+```{r}
+alpha=3*sqrt(3*k-9-4*s^2)/(sqrt(v)*(3*k-9-5*s^2))
+beta=3*s/(sqrt(v)*(3*k-9-5*s^2))
+gamma=sqrt(alpha^2-beta^2)
+delta=9/((3*k-9-4*s^2)*gamma*t)
+mu=(m*gamma-beta*delta*t)/(gamma*t)
+MMestimates=c(alpha,beta,delta,mu)
+MMestimates
+
+```
+
+
+## question5
+```{r}
+sum(log(NIG(rZM,MMestimates)))
+t4=proc.time()
+```
+
+## question6
+```{r}
+t_covergence=t2-t1
+t_covergence
+t_moment=t4-t3
+t_moment
+```
+
+## question7
+```{r}
+#Laplace theta[1]=mu, theta[2]=b
+initialvalueLaplace=c(0,0.1)
+Laplace=function(x,theta){
+    exp(-abs(x-theta[1]*t)/theta[2]*t)/(2*theta[2]*t)
+}
+resultLaplace=optim(initialvalueLaplace,fn=function(theta)
+{-sum(log(Laplace(rZM,theta)))},method = "L-BFGS-B")
+resultLaplace
+```
+
+
+
+## question4
+```{r}
+```
+## question4
+```{r}
+
+```
+## question4
+```{r}
+```
