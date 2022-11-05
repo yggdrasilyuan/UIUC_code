@@ -2,7 +2,7 @@
 ## Question 1
 ```{r}
 library(moments)
-data=read.csv("D:\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
+data=read.csv("C:\\vscode\\code\\UIUC_code\\R_code\\ZMTSLA.csv",encoding="UTF-8",header=TRUE)
 m=nrow(data)
 zm=data$ZM
 lenth=length(zm)
@@ -15,6 +15,7 @@ loglikelihoodBSM=-n*log(2*pi*sigma^2*t)/2-(n-1)*sd(rZM)^2/(2*sigma^2*t)
 mu
 sigma
 loglikelihoodBSM
+resBSM=c(mu,sigma)
 ```
 ## question2
 ```{r}
@@ -77,24 +78,42 @@ t_moment
 ## question7
 ```{r}
 #Laplace theta[1]=mu, theta[2]=b
-initialvalueLaplace=c(0,0.1)
+u=mean(rZM)
+b=sd(rZM)/sqrt(2)
+initialvalueLaplace=c(u,b)
 Laplace=function(x,theta){
-    exp(-abs(x-theta[1]*t)/theta[2]*t)/(2*theta[2]*t)
+    exp(-abs(x-theta[1])/theta[2])/(2*theta[2])
 }
 resultLaplace=optim(initialvalueLaplace,fn=function(theta)
-{-sum(log(Laplace(rZM,theta)))},method = "L-BFGS-B")
+{-sum(log(Laplace(rZM,theta)))})
 resultLaplace
 ```
 
-
-
-## question4
+## question8
 ```{r}
+m=median(rZM)
+b=1/n*sum(abs(rZM-m))
+ins = c(m,b)
+ins
+sum(log(Laplace(rZM,ins)))
 ```
-## question4
+
+## question9
 ```{r}
+#BSM: theta[1]=mu, theta[2]=sigma
+BSM=function(x,theta){exp(-(x-theta[1]*t)^2/(2*theta[2]^2*t))/sqrt(2*pi*theta[2]^2*t)}
+resultBSM=optim(resBSM,fn=function(theta){-sum(log(BSM(rZM,theta)))},method="L-BFGS-B")
+resultBSM
 
 ```
-## question4
+
+## question10
 ```{r}
+hist(rZM,breaks=30,prob=TRUE,ylim=c(0,20));
+thetaNIG=resultNIG$par;
+thetaBSM=resultBSM$par;
+thetaLaplace=resultLaplace$par
+curve(BSM(x,thetaBSM),add=TRUE,col="red",lwd=2,lty=1)
+curve(NIG(x,thetaNIG),add=TRUE,col="blue",lwd=2,lty=1)
+curve(Laplace(x,thetaLaplace),add=TRUE,col="yellow",lwd=2,lty=1)
 ```

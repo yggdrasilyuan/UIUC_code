@@ -1,0 +1,95 @@
+## question1.1-2
+```{r}
+set.seed(1)
+t=seq(1,100,by=1) #time
+X  =10+t+rnorm(100)
+Y1 =20+2*t+rnorm(100)
+Y2 =20+2*t+5*X+rnorm(100)
+data = data.frame(X,Y1,Y2)
+ddata=data.frame(apply(data,2,diff))
+# ddata
+# data
+fit1=lm(X~Y1)
+fit2=lm(X~Y2)
+summary(fit1)
+summary(fit2)
+
+dX=ddata$X
+dY1=ddata$Y1
+dY2=ddata$Y2
+pairs(cbind(dX,dY1,dY2))
+fit3=lm(dX~dY1)
+fit4=lm(dX~dY2)
+summary(fit3)
+summary(fit4)
+```
+
+## question2
+```{r}
+library(AER)
+data("USMacroG")
+
+dim(USMacroG)
+
+USMacroG=na.omit(USMacroG)
+dim(USMacroG)
+USMacroG
+Macro=as.data.frame(apply(USMacroG,2,diff))
+dim(Macro)
+
+sum(is.na(USMacroG))
+sum(is.na(Macro))
+```
+
+## question 2.1
+```{r}
+dConsumption=USMacroG[,"consumption"]
+dCpi=USMacroG[,"cpi"]
+dGdp=USMacroG[,"gdp"]
+fit21=lm(dConsumption~dCpi)
+summary(fit21)
+ddConsumption=Macro$consumption
+ddCpi=Macro$cpi
+ddGdp=Macro$gdp
+fit22=lm(ddConsumption~ddCpi)
+summary(fit22)
+
+
+```
+## quetion 2.2
+```{r}
+plot(ddConsumption, ddGdp, main="Scatterplot Example",
+xlab="consumption", ylab="gdp", pch=19)
+fit23=lm(ddConsumption~ddGdp)
+summary(fit23)
+```
+
+## quetion 2.3
+```{r}
+library(tidyverse)
+library(ggpubr)
+model <- lm(Macro$consumption ~ Macro$gdp)
+model
+fit24=lm(ddConsumption~ddGdp)
+summary(fit24)
+```
+
+## question2.4
+```{r}
+anova(fit24)
+```
+
+
+## question2.5
+```{r}
+Y2=ddConsumption[1:201]
+X2=ddGdp[1:201]
+fit25=lm(Y2~X2)
+newdata=data.frame(X=ddGdp[202])
+newdata
+predict(fit25,newdata,interval="predict")
+ddConsumption[202]
+```
+## question2.4
+```{r}
+```
