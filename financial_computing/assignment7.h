@@ -3,13 +3,14 @@
 #define Header_h
 
 
-#endif /* Header_h */
+#endif
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
 #include <random>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 
