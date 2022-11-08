@@ -83,7 +83,7 @@ anova(fit24)
 ## question2.5
 ```{r}
 Y2=ddConsumption[1:201]
-X2=ddGdp[1:201]
+X2=ddGdp[1:201]  
 fit25=lm(Y2~X2)
 newdata=data.frame(X=ddGdp[202])
 newdata
