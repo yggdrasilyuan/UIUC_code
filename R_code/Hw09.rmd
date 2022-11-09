@@ -33,7 +33,7 @@ dim(USMacroG)
 
 USMacroG=na.omit(USMacroG)
 dim(USMacroG)
-USMacroG
+# USMacroG
 Macro=as.data.frame(apply(USMacroG,2,diff))
 dim(Macro)
 
@@ -68,10 +68,21 @@ summary(fit23)
 ```{r}
 library(tidyverse)
 library(ggpubr)
+
 model <- lm(Macro$consumption ~ Macro$gdp)
 model
 fit24=lm(ddConsumption~ddGdp)
 summary(fit24)
+
+alpha=0.01
+t=qt(1-alpha/2,200)
+beta_gdp=0.39623
+se=0.03038
+lb=beta_gdp-t*se
+ub=beta_gdp+t*se
+lb
+ub
+
 ```
 
 ## question2.4
@@ -82,14 +93,39 @@ anova(fit24)
 
 ## question2.5
 ```{r}
-Y2=ddConsumption[1:201]
-X2=ddGdp[1:201]  
+Y2=Macro$consumption[1:201]
+X2=Macro$gdp[1:201]
 fit25=lm(Y2~X2)
-newdata=data.frame(X=ddGdp[202])
-newdata
+newdata=data.frame(X=Macro$gdp[202])
+# newdata
 predict(fit25,newdata,interval="predict")
+# predict(fit25,newdata,interval="predict")
 ddConsumption[202]
 ```
-## question2.4
+
+## question2.6
 ```{r}
+fit26=lm(Macro$consumption~Macro$tbill+Macro$inflation+Macro$cpi)
+summary(fit26)
+```
+
+## question2.7
+```{r}
+fit27=lm(Macro$consumption~Macro$m1)
+summary(fit27)
+fit28=lm(Macro$consumption~Macro$m1+I(Macro$m1^2))
+summary(fit28)
+
+plot(Macro$m1,Macro$consumption)
+lines(Macro$m1,fit27$fitted.values,lwd=3,col="red")
+lines(sort(Macro$m1),fit28$fitted.values[order(Macro$m1)],lwd=3,col="blue")
+legend("bottomright",c("Linear","Quadrratic"),col=c("red","blue"),lwd=3)
+```
+
+## question2.8
+```{r}
+fit29=lm(Macro$consumption~Macro$gdp+Macro$invest+Macro$government+
+Macro$dpi+Macro$m1+Macro$tbill+Macro$inflation+Macro$cpi+Macro$unemp+Macro$population+
+Macro$interest)
+summary(fit29)
 ```
