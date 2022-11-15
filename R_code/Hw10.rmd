@@ -1,0 +1,103 @@
+```{r}
+library(AER)
+data("USMacroG")
+
+# dim(USMacroG)
+
+USMacroG=na.omit(USMacroG)
+# dim(USMacroG)
+# USMacroG
+Macro=as.data.frame(apply(USMacroG,2,diff))
+# dim(Macro)
+```
+
+## Question1.1
+```{r}
+fit1=lm(Macro$consumption~Macro$gdp+Macro$invest+Macro$government+
+Macro$dpi+Macro$m1+Macro$tbill+Macro$inflation+Macro$cpi+Macro$unemp+Macro$population+
+Macro$interest)
+summary(fit1)
+```
+
+## Question1.2
+```{r}
+library(leaps)
+fit2=regsubsets(Macro$consumption~.,Macro,nvmax=11)
+result=summary(fit2)
+result
+names(result)
+# Cp
+plot(result$cp,xlab="# of regressors",ylab="cp",type="b")
+j=which.min(result$cp)
+points(j,result$cp[j],col="red",cex=2,pch=20)
+coef(fit2,j)
+```
+
+## Question1.4
+```{r}
+plot(result$adjr2,xlab="# of regressors",ylab="adj R2",type="b")
+i=which.max(result$adjr2)
+points(i,result$adjr2[i],col="red",cex=2,pch=20)
+coef(fit2,i)
+```
+
+
+## Question1.5
+```{r}
+fit3=lm(Macro$consumption~Macro$gdp+Macro$invest+Macro$government+Macro$dpi+Macro$population+Macro$interest)
+summary(fit3)
+plot(fit3$fitted.values,fit3$residuals)
+abline(0,0)
+```
+
+## Question1.6
+```{r}
+acf(fit3$residuals)
+library(forecast)
+auto.arima(fit3$residuals)
+```
+
+## Question1.7
+```{r}
+plot(fit3$fitted.values,rstandard(fit3))
+hats=as.data.frame(hatvalues(fit3))
+avg=mean(hatvalues(fit3))
+avg
+which(abs(rstandard(fit3))>3)
+which(hatvalues(fit3)>2*avg)
+```
+
+
+## Question2.1
+```{r}
+library(ISLR)
+x=Credit
+x$bool_student=x$Student
+# x$Income[1]
+x$Student[1]
+x$bool_student=factor(x$bool_student, levels=c('Yes','No'),labels=c('1','0'))
+# class(x$bool_student)
+x$bool_student=as.integer(x$bool_student)-1
+sd(x$bool_student)
+head(x)
+length(x$bool_student)
+# names(x)
+fit21=lm(x$Balance~x$Income+x$Limit+x$Rating+x$Cards+x$Age+x$bool_student)
+result21=summary(fit21)
+result21
+16.50956*20
+```
+
+## Question2.2
+```{r}
+fit22=lm(x$Balance~x$Income+x$Limit+x$Rating+x$Cards+x$Age+x$bool_student+x$bool_student:x$Limit)
+summary(fit22)
+```
+
+## Question2.3
+```{r}
+fit23=lm(x$Balance~x$Income+x$Limit+x$Rating+x$Cards+x$Age+x$bool_student+x$bool_student:x$Limit+I(x$Limit^2)+I(x$Income^2))
+result23=summary(fit23)
+result23
+
+```
