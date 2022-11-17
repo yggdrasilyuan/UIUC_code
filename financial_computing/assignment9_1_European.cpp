@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 	sscanf(argv[4], "%lf", &volatility);
 	sscanf(argv[5], "%lf", &initial_stock_price);
 	sscanf(argv[6], "%lf", &strike_price);
-	auto start = system_clock::now();
+
 	double** european_call;
 	european_call = new double*[no_of_divisions];
 	for (int i = 0; i < no_of_divisions; i++)
@@ -116,6 +116,7 @@ int main(int argc, char* argv[])
 
 	double** european_put;
 	european_put = new double*[no_of_divisions];
+	
 	for (int i = 0; i < no_of_divisions; i++)
 		european_put[i] = new double[2 * no_of_divisions + 1];
 	for (int i = 0; i < no_of_divisions; i++)
@@ -123,6 +124,7 @@ int main(int argc, char* argv[])
 			european_put[i][j] = -1;
 
 
+	auto start = system_clock::now();
 	up_factor = exp(volatility * sqrt(2 * expiration_time / ((double)no_of_divisions)));
 	forward_return = exp(risk_free_interest_rate * expiration_time / ((double)no_of_divisions));
 	uptick_prob = pow(((sqrt(forward_return) - (1 / sqrt(up_factor))) / (sqrt(up_factor) - (1 / sqrt(up_factor)))), 2.0);

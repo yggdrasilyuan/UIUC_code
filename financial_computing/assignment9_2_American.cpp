@@ -60,7 +60,7 @@ double american_put_option(int k, int i, double** american_put)
 
 int main(int argc, char* argv[])
 {
-	auto start = system_clock::now();
+	
 	sscanf(argv[1], "%lf", &expiration_time);
 	sscanf(argv[2], "%d", &no_of_divisions);
 	sscanf(argv[3], "%lf", &risk_free_interest_rate);
@@ -84,6 +84,7 @@ int main(int argc, char* argv[])
 		for (int j = 0; j < 2 * no_of_divisions + 1; j++)
 			american_put[i][j] = -1;
 
+	auto start = system_clock::now();
 	up_factor = exp(volatility * sqrt(2.0 * (expiration_time / ((double)no_of_divisions))));
 	forward_return = exp(risk_free_interest_rate * expiration_time / ((double)no_of_divisions));
 	uptick_prob = pow(((sqrt(forward_return) - (1 / sqrt(up_factor))) / (sqrt(up_factor) - (1 / sqrt(up_factor)))), 2.0);
