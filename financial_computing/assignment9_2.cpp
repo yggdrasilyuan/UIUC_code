@@ -4,7 +4,9 @@
 #include <fstream>
 #include <cstdlib>
 #include <algorithm>
+#include <chrono>   
 using namespace std;
+using namespace chrono;
 
 double up_factor, uptick_prob, risk_free_interest_rate, strike_price, downtick_prob, notick_prob;
 double initial_stock_price, expiration_time, volatility, forward_return;
@@ -58,7 +60,7 @@ double american_put_option(int k, int i, double** american_put)
 
 int main(int argc, char* argv[])
 {
-
+	auto start = system_clock::now();
 	sscanf(argv[1], "%lf", &expiration_time);
 	sscanf(argv[2], "%d", &no_of_divisions);
 	sscanf(argv[3], "%lf", &risk_free_interest_rate);
@@ -110,7 +112,12 @@ int main(int argc, char* argv[])
 	cout << initial_stock_price << " + " << put_price << " - " << call_price << " = " << strike_price << "exp" << "(" <<
 		-risk_free_interest_rate << " * " << expiration_time << ")" << endl;
 	cout << initial_stock_price + put_price - call_price << " ?=? " << strike_price * exp(-risk_free_interest_rate * expiration_time) << endl;
-	cout << "Looks like Put-Call Parity does not hold!" << endl;
+	cout << "Looks like Put-Call Parity does NOT hold!" << endl;
 	cout << "--------------------------------------" << endl;
 
+	auto end   = system_clock::now();
+	auto duration = duration_cast<microseconds>(end - start);
+	cout <<  "It costs " 
+		<< double(duration.count()) * microseconds::period::num / microseconds::period::den 
+		<< "second " << endl;
 }

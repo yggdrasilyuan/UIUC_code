@@ -3,7 +3,12 @@
 #include <cmath>
 #include <fstream>
 #include <cstdlib>
+#include <chrono>   
 using namespace std;
+using namespace chrono;
+
+
+
 
 double up_factor, uptick_prob, risk_free_interest_rate, strike_price, downtick_prob, notick_prob;
 double initial_stock_price, expiration_time, volatility, forward_return;
@@ -91,6 +96,8 @@ double european_put_option(int k, int i, double** european_put)
 
 int main(int argc, char* argv[])
 {
+	
+	
 
 	sscanf(argv[1], "%lf", &expiration_time);
 	sscanf(argv[2], "%d", &no_of_divisions);
@@ -98,7 +105,7 @@ int main(int argc, char* argv[])
 	sscanf(argv[4], "%lf", &volatility);
 	sscanf(argv[5], "%lf", &initial_stock_price);
 	sscanf(argv[6], "%lf", &strike_price);
-
+	auto start = system_clock::now();
 	double** european_call;
 	european_call = new double*[no_of_divisions];
 	for (int i = 0; i < no_of_divisions; i++)
@@ -150,4 +157,10 @@ int main(int argc, char* argv[])
 		-risk_free_interest_rate << "*" << expiration_time << ")" << endl;
 	cout << initial_stock_price + put_price - call_price << " = " << strike_price * exp(-risk_free_interest_rate * expiration_time)<<endl;
 	cout << "--------------------------------------" << endl;
+
+	auto end   = system_clock::now();
+	auto duration = duration_cast<microseconds>(end - start);
+	cout <<  "It costs " 
+		<< double(duration.count()) * microseconds::period::num / microseconds::period::den 
+		<< "second " << endl;
 }
