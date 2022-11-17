@@ -17,7 +17,7 @@ summary(fit2)
 dX=ddata$X
 dY1=ddata$Y1
 dY2=ddata$Y2
-pairs(cbind(dX,dY1,dY2))
+# pairs(cbind(dX,dY1,dY2))
 fit3=lm(dX~dY1)
 fit4=lm(dX~dY2)
 summary(fit3)
@@ -81,7 +81,8 @@ se=0.03038
 lb=beta_gdp-t*se
 ub=beta_gdp+t*se
 lb
-ub
+
+
 
 ```
 
@@ -93,14 +94,11 @@ anova(fit24)
 
 ## question2.5
 ```{r}
-Y2=Macro$consumption[1:201]
-X2=Macro$gdp[1:201]
-fit25=lm(Y2~X2)
-newdata=data.frame(X=Macro$gdp[202])
-# newdata
-predict(fit25,newdata,interval="predict")
-# predict(fit25,newdata,interval="predict")
-ddConsumption[202]
+
+fit25 = lm(consumption ~ gdp, data=Macro[1:201,])
+
+predict(fit25,Macro[202,],interval="predict")
+
 ```
 
 ## question2.6
