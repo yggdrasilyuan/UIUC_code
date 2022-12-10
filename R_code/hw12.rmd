@@ -1,0 +1,44 @@
+## Question2.3
+
+```{r}
+library(Ecdat)
+library(forecast)
+data(Capm)
+r=Capm$rf
+dr=diff(r)
+fit=auto.arima(r)
+fit
+# h=1
+fit1=auto.arima(dr)
+fit1
+
+h=1
+forecast(fit1,h)
+
+length(r)
+r[516]
+cp=r[516]+0.005465171
+cp
+```
+
+## Question2.4
+```{r}
+forecast(fit1,h,level=90)
+lb=r[516]-0.1079146
+lb
+ub=r[516]+0.1188449
+ub
+
+z=qnorm(1-0.05)
+lb2=cp-z*sqrt(0.004751)
+lb2
+ub2=cp+z*sqrt(0.004751)
+ub2
+```
+
+## question2.5
+```{r}
+forecast(fit1,h=20,level=90)
+plot(c(dr,forecast(fit1,h=20,level=0.9)$mean))
+lines(1:length(dr),dr)
+```

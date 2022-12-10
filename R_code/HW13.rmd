@@ -1,0 +1,98 @@
+## Question2.1
+```{r}
+library(quantmod)
+getSymbols(Symbols = "^GSPC", from = "2000-01-01", to = "2022-11-12", auto_assign = TRUE)
+return=dailyReturn(GSPC,type="log")
+head(return)
+tail(return)
+# length(return)
+plot(ts(return,start=c(2000,1),frequency=252),ylab="return")
+```
+
+## Question2.2
+```{r}
+acf(return)
+Box.test(return,lag=10,type="Ljung-Box")
+```
+
+## Question2.3
+```{r}
+library(tseries)
+adf.test(return)
+```
+
+## Question2.4
+```{r}
+max_loglik = 0
+for (p in 0:3) {
+  for (q in 0:3){
+    model_ = arima(return, c(p, 0, q))
+  # print(model_$loglik)
+    if (model_$loglik > max_loglik ) {
+      best_model = model_
+      best_x = c(p,q)
+      max_loglik = model_$loglik
+    }
+  }
+}
+print(best_x)
+
+arima(return, c(3, 0, 3))
+```
+
+## Question2.5
+```{r}
+library(fGarch)
+
+# min_aic = 0
+# for (i in 0:2) {
+#   for (j in 0:2) {
+#     for (p in 1:2) {
+#       for (q in 0:2) {
+#         model_ = garchFit(substitute(~arma(i, j) + garch(p, q), list(i=i, j=j, p=p,q=q)), return, trace=FALSE)
+#         model_aic = model_@fit$ics[1]*nrow(return)
+#         if (model_aic < min_aic) {
+#           best_garch_model = model_
+#           best_x = c(i,j,p,q)
+#           min_aic = model_aic
+#         }
+#       }
+#     }
+#   }
+# }
+# print(best_x)
+# print(min_aic)
+
+result=garchFit(formula= ~arma(1,1)+garch(2,2),data=return,trace=FALSE)
+result
+result@fit$ics[1]*nrow(return)
+
+```
+
+## Question2.6
+```{r}
+res=residuals(result, standardize = T)
+qqnorm(res)
+qqline(res)
+```
+
+## Question2.7
+```{r}
+
+
+best_garch_model_sged=garchFit(formula= ~arma(1,1)+garch(2,2),data=return,trace=FALSE,conda.dist="sged")
+# best_garch_model_sged@
+
+
+# # qqline(res1)
+# qqplot(res,rsged(10000,nu=result1@fit$par['shape'],xi=result1@fit$par['skew']))
+# qqline(res,distribution = function(q){qsged(q,nu=result1@fit$par['shape'],xi=result1@fit$par['skew'])})
+```
+
+```{r}
+model_ = garchFit(substitute(~arma(i, j) + garch(p, q), list(i=1, j=1, p=2,q=2)), return, trace=FALSE, cond.dist = "sged")
+model_@fit$ics[1]*nrow(return)
+resi_sged = residuals(model_, standardize=T)
+qqplot(rsged(10000, nu =model_@fit$par["shape"], xi=model_@fit$par["skew"]),resi_sged)
+qqline(resi_sged, distribution =function(q){qsged(q, nu =model_@fit$par["shape"], xi=model_@fit$par["skew"])})
+```

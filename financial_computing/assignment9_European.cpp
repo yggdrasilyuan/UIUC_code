@@ -10,7 +10,7 @@ using namespace chrono;
 
 
 
-double up_factor, uptick_prob, risk_free_interest_rate, strike_price, downtick_prob, notick_prob;
+double up_factor, uptick_prob, r_f, strike_price, downtick_prob, notick_prob;
 double initial_stock_price, expiration_time, volatility, forward_return;
 int no_of_divisions;
 
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 
 	sscanf(argv[1], "%lf", &expiration_time);
 	sscanf(argv[2], "%d", &no_of_divisions);
-	sscanf(argv[3], "%lf", &risk_free_interest_rate);
+	sscanf(argv[3], "%lf", &r_f);
 	sscanf(argv[4], "%lf", &volatility);
 	sscanf(argv[5], "%lf", &initial_stock_price);
 	sscanf(argv[6], "%lf", &strike_price);
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 
 	auto start = system_clock::now();
 	up_factor = exp(volatility * sqrt(2 * expiration_time / ((double)no_of_divisions)));
-	forward_return = exp(risk_free_interest_rate * expiration_time / ((double)no_of_divisions));
+	forward_return = exp(r_f * expiration_time / ((double)no_of_divisions));
 	uptick_prob = pow(((sqrt(forward_return) - (1 / sqrt(up_factor))) / (sqrt(up_factor) - (1 / sqrt(up_factor)))), 2.0);
 	downtick_prob = pow(((sqrt(up_factor) - sqrt(forward_return)) / (sqrt(up_factor) - (1 / sqrt(up_factor)))), 2.0);
 	notick_prob = 1 - uptick_prob - downtick_prob;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 	cout << "(Memoized) Recursive Trinomial European Option Pricing" << endl;
 	cout << "Expiration Time (Years) = " << expiration_time << endl;
 	cout << "Number of Divisions = " << no_of_divisions << endl;
-	cout << "Risk Free Interest Rate = " << risk_free_interest_rate << endl;
+	cout << "Risk Free Interest Rate = " << r_f << endl;
 	cout << "Volatility (%age of stock value) = " << volatility * 100 << endl;
 	cout << "Initial Stock Price = " << initial_stock_price << endl;
 	cout << "Strike Price = " << strike_price << endl;
@@ -145,19 +145,19 @@ int main(int argc, char* argv[])
 	double call_price = european_call_option(0, 0, european_call);
 	cout << "Trinomial Price of an European Call Option = " << call_price << endl;
 	cout << "Call Price according to Black-Scholes = " <<
-		option_price_call_black_scholes(initial_stock_price, strike_price, risk_free_interest_rate,
+		option_price_call_black_scholes(initial_stock_price, strike_price, r_f,
 			volatility, expiration_time) << endl;
 	cout << "--------------------------------------" << endl;
 	double put_price = european_put_option(0, 0, european_put);
 	cout << "Trinomial Price of an European Put Option = " << put_price << endl;
 	cout << "Put Price according to Black-Scholes = " <<
-		option_price_put_black_scholes(initial_stock_price, strike_price, risk_free_interest_rate,
+		option_price_put_black_scholes(initial_stock_price, strike_price, r_f,
 			volatility, expiration_time) << endl;
 	cout << "--------------------------------------" << endl;
 	cout << "Verifying Put-Call Parity: S+P-C = Kexp(-forward_return*T)" << endl;
 	cout << initial_stock_price << "+" << put_price << "-" << call_price << "=" << strike_price << "exp" << "(" <<
-		-risk_free_interest_rate << "*" << expiration_time << ")" << endl;
-	cout << initial_stock_price + put_price - call_price << " = " << strike_price * exp(-risk_free_interest_rate * expiration_time)<<endl;
+		-r_f << "*" << expiration_time << ")" << endl;
+	cout << initial_stock_price + put_price - call_price << " = " << strike_price * exp(-r_f * expiration_time)<<endl;
 	cout << "--------------------------------------" << endl;
 
 	auto end   = system_clock::now();
