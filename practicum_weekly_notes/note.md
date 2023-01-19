@@ -1,0 +1,3 @@
+### Introduce
+Southeast University
+I have a bachalor degree of computer science and equipped with strong programming skill in Python, C++ and familiared with many classic machine learning models. I once worked as an intern at one of the largest quant companies in China. In that company I tested factors which were mentioned in some research papers, washed original stock data, instructed factors, backtested them and analyzed the outcome. And I also have a background in NLP area. Working with my teammate, we proposed the Time Relaxed Temporary Random Walk(TXT Walk Algorithm), which is a more useful embedding method in network representation. 
