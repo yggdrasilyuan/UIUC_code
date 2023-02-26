@@ -1,7 +1,9 @@
-x=(0.5**0.25/(1-(1/2)**0.75))-0.5**0.25
+#jonney Chu
 
+name = input("what's your name?")
 
-y=1/0.99-1
-z=0.01/0.95
-print(x**4)    
+print("Hello,"+ "My name is "+name)
 
+a,b,c,d=10,5.5,"hello world!",True
+for i in [a,b,c,d]:
+    print(type(i))
