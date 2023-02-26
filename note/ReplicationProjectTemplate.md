@@ -119,6 +119,12 @@ The thesis of the paper is that the value of a firm's growth options can affect 
 Asness, C. S. (1995). The power of past stock returns to explain future stock returns. Available at SSRN 2865769.
 The thesis of the paper is that past stock returns have predictive power for future stock returns, even after controlling for other factors like book-to-market ratios and dividend yields.The main findings of the paper are that a simple momentum trading strategy based on past stock returns generates significant abnormal returns, and that these returns cannot be explained by traditional risk factors. The paper also suggests that momentum strategies are more effective for small stocks and during periods of market turbulence.The paper is relevant to "Value and Momentum Everywhere" as it provides empirical evidence for the existence of momentum effects in financial markets. It also highlights the potential benefits of combining momentum and value strategies, as momentum strategies can be more effective for small stocks and during periods of market turbulence, while value strategies can help to mitigate the risks associated with momentum investing.
 
+## derivative works
+"Value and Momentum Everywhere" has inspired numerous derivative works, including papers that refine the original momentum and value strategies, explore their performance across different countries and asset classes, and examine the role of other factors like liquidity, volatility, and investor sentiment. Some of these works have also sought to combine momentum and value strategies with other factors, such as quality and low volatility, to create more robust investment strategies. Overall, these derivative works have helped to advance our understanding of the factors that drive asset returns and have contributed to the development of more sophisticated investment strategies.
+
+Zaremba, A., & Shemer, J. (2017). Trend Is Your Friend: Momentum Investing.
+
+
 # Replication
 
 <!-- Now we move on to the actual replication.  The sections included here are all -->
