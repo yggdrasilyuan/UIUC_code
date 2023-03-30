@@ -1,19 +1,14 @@
+#include <fstream>
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-#include <fstream>
-#include <cstdlib>
 #include <random>
 #include <chrono>
 using namespace std;
 
 unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
 std::default_random_engine generator(seed);
-
-double risk_free_rate, strike_price, initial_stock_price, expiration_time, volatility, barrier_price;
-int num_of_trials, num_of_divs;
-
-
 double get_uniform()
 {
     std::uniform_real_distribution <double> distribution(0, 1.0);
@@ -21,8 +16,12 @@ double get_uniform()
     return (number);
 }
 
+double risk_free_rate, strike_price, initial_stock_price;
+double expiration_time, volatility, barrier_price;
+int num_of_trials, num_of_divs;
+
 double N(const double& z) {
-    if (z > 6.0) { return 1.0; }; // this guards against overflow
+    if (z > 6.0) { return 1.0; }; 
     if (z < -6.0) { return 0.0; };
     double b1 = 0.31938153;
     double b2 = -0.356563782;
@@ -40,11 +39,7 @@ double N(const double& z) {
     return n;
 };
 
-double option_price_call_black_scholes(const double& S,       
-    const double& K,       
-    const double& r,       
-    const double& sigma,   
-    const double& time)      
+double call_BSM(const double& S, const double& K,const double& r, const double& sigma, const double& time)      
 {
     double time_sqrt = sqrt(time);
     double d1 = (log(S / K) + r * time) / (sigma * time_sqrt) + 0.5 * sigma * time_sqrt;
@@ -52,11 +47,7 @@ double option_price_call_black_scholes(const double& S,
     return S * N(d1) - K * exp(-r * time) * N(d2);
 };
 
-double option_price_put_black_scholes(const double& S,      
-    const double& K,      
-    const double& r,      
-    const double& sigma,  
-    const double& time)
+double put_BSM(const double& S, const double& K, const double& r, const double& sigma, const double& time)
 {
     double time_sqrt = sqrt(time);
     double d1 = (log(S / K) + r * time) / (sigma * time_sqrt) + 0.5 * sigma * time_sqrt;
@@ -64,44 +55,38 @@ double option_price_put_black_scholes(const double& S,
     return K * exp(-r * time) * N(-d2) - S * N(-d1);
 };
 
-double closed_form_down_and_out_european_call_option()
+double ep_out_call()
 {
     // I took this formula from Wilmott, Howison and Dewynne, "The Mathematics of Financial Derivatives"
     double K = (2 * risk_free_rate) / (volatility * volatility);
-    double A = option_price_call_black_scholes(initial_stock_price, strike_price,
+    double A = call_BSM(initial_stock_price, strike_price,
         risk_free_rate, volatility, expiration_time);
     double B = (barrier_price * barrier_price) / initial_stock_price;
     double C = pow(initial_stock_price / barrier_price, -(K - 1));
-    double D = option_price_call_black_scholes(B, strike_price, risk_free_rate, volatility, expiration_time);
+    double D = call_BSM(B, strike_price, risk_free_rate, volatility, expiration_time);
     return (A - D * C);
 }
 
-double closed_form_down_and_in_european_put_option()
+double ep_in_put()
 {
-    // just making it easier by renaming the global variables locally
-    double S = initial_stock_price;
     double r = risk_free_rate;
     double T = expiration_time;
     double sigma = volatility;
-    double H = barrier_price;
-    double X = strike_price;
-
-    // Took these formulae from some online reference
     double lambda = (r + ((sigma * sigma) / 2)) / (sigma * sigma);
     double temp = 2 * lambda - 2.0;
-    double x1 = (log(S / H) / (sigma * sqrt(T))) + (lambda * sigma * sqrt(T));
-    double y = (log(H * H / (S * X)) / (sigma * sqrt(T))) + (lambda * sigma * sqrt(T));
-    double y1 = (log(H / S) / (sigma * sqrt(T))) + (lambda * sigma * sqrt(T));
-    return (-S * N(-x1) + X * exp(-r * T) * N(-x1 + sigma * sqrt(T)) +
-        S * pow(H / S, 2 * lambda) * (N(y) - N(y1)) -
-        X * exp(-r * T) * pow(H / S, temp) * (N(y - sigma * sqrt(T)) - N(y1 - sigma * sqrt(T))));
+    double x1 = (log(initial_stock_price / barrier_price) / (sigma * sqrt(T))) + (lambda * sigma * sqrt(T));
+    double y = (log(barrier_price * barrier_price / (initial_stock_price * strike_price)) / (sigma * sqrt(T))) + (lambda * sigma * sqrt(T));
+    double y1 = (log(barrier_price / initial_stock_price) / (sigma * sqrt(T))) + (lambda * sigma * sqrt(T));
+    return (-initial_stock_price * N(-x1) + strike_price * exp(-r * T) * N(-x1 + sigma * sqrt(T)) +
+        initial_stock_price * pow(barrier_price / initial_stock_price, 2 * lambda) * (N(y) - N(y1)) -
+        strike_price * exp(-r * T) * pow(barrier_price / initial_stock_price, temp) * (N(y - sigma * sqrt(T)) - N(y1 - sigma * sqrt(T))));
 }
 
-double closed_form_down_and_out_european_put_option()
+double ep_out_put()
 {
-    double vanilla_put = option_price_put_black_scholes(initial_stock_price, strike_price,
+    double vanilla_put = put_BSM(initial_stock_price, strike_price,
         risk_free_rate, volatility, expiration_time);
-    double put_down_in = closed_form_down_and_in_european_put_option();
+    double put_down_in = ep_in_put();
     return (vanilla_put - put_down_in);
 }
 
@@ -193,12 +178,12 @@ int main(int argc, const char* argv[]) {
     cout << "--------------------------------" << endl;
     cout << "The average Call Price by explict simulation = " << call_option_price << endl;
     cout << "The Call Price using (1-p)-adjustment term   = " << call_option_price_adj << endl;
-    cout << "Theoretical Call Price                       = " << closed_form_down_and_out_european_call_option() << endl;
+    cout << "Theoretical Call Price                       = " << ep_out_call() << endl;
 
     cout << "--------------------------------" << endl;
     cout << "The average Put Price by explict simulation = " << put_option_price << endl;
     cout << "The Put Price using (1-p)-adjustment term   = " << put_option_price_adj << endl;
-    cout << "Theoretical Put Price                      = " << closed_form_down_and_out_european_put_option() << endl;
+    cout << "Theoretical Put Price                      = " << ep_out_put() << endl;
     cout << "--------------------------------" << endl;
 
     return 0;
