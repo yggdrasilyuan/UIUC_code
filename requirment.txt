@@ -1,0 +1,10 @@
+alphalens==0.4.0
+empyrical==0.5.5
+gradient_free_optimizers
+matplotlib
+numpy
+pandas
+qlib==0.0.2.dev20
+scikit_learn
+seaborn==0.11.2
+TA_Lib==0.4.19
