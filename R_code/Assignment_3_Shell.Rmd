@@ -1,0 +1,73 @@
+---
+title: "Assignment 3 Shell"
+output: 
+---
+Name:
+Collaborators:
+
+```{r}
+# Problem 0
+# Download cba data, change your working directory to access the file
+cba = read.table("cba_admissions_1999.txt", sep = "\t", header = T, quote = "", allowEscapes = T)
+```
+
+Problem 1.
+```{r}
+# 1(a)
+PA_data = subset(cba, state == "PA")
+num_PA_cba = sum(PA_data$from_PA)
+percentage_PA_cba = num_PA_cba/880*100 # 73.64%
+# 1(b)
+PA_male_data = subset(PA_data, PA_data$Female == 0)
+num_PA_male_data = sum(PA_data$Female == 0)
+percentage_PA_male = num_PA_male_data/num_PA_cba#54.17%
+noPA_male = subset(cba, cba$Female==0&cba$from_PA==0)
+noPA_data = subset(cba, state != "PA")
+print(nrow(noPA_male)/nrow(noPA_data))
+ #56.90%
+# 1(c)
+sd_man_PA = sd(PA_male_data$Max_Test_Score) #108.9688
+mean_man_PA = mean(PA_male_data$Max_Test_Score) #1158.7749
+sd_man_noPA = sd(noPA_male$Max_Test_Score) #126.5215
+mean_man_noPA = mean(noPA_male$Max_Test_Score) #1217.8788
+# 1(d)
+par(mfrow = c(1,2))
+ hist(PA_male_data$Max_Test_Score, main="Test Scores for PA Male",xlab = "Score",ylab = "Frequency")
+hist(noPA_male$Max_Test_Score,main="Test Scores for non-PA Male",xlab = "Score",ylab = "Frequency")
+# 1(e)
+par(mfrow = c(1,2))
+boxplot(PA_male_data$Max_Test_Score,main= "Test Scores for PA Male")
+boxplot(noPA_male$Max_Test_Score, main= "Test Scores for noPA Male")
+
+
+```
+
+Problem 2.
+```{r}
+# 2(a)
+paid_deposit = subset(cba,cba$paiddeposit == 1)
+print(nrow(paid_deposit)/880) #32.159%
+
+# 2(b)
+print(nrow(paid_deposit[paid_deposit$scholarship_yes_no == 1, ])/nrow(paid_deposit)) #18.02%
+# 2(c)
+Alumniparent_deposit = subset(paid_deposit, father_alumni == 1 | mother_alumni == 1)
+print(nrow(Alumniparent_deposit)/nrow(paid_deposit)) #10.6
+```
+
+Problem 3.
+```{r}
+# 3(a)
+math_verbal = subset(cba,!is.na(SAT_math) & !is.na(SAT_verbal))
+# 3(b)
+plot(math_verbal$SAT_math,math_verbal$SAT_verbal)
+
+# 3(c)
+par(new = T)
+plot(SAT_math ~ SAT_verbal, data = math_verbal[math_verbal$paiddeposit == 1, ], col = "red", xlim = math_verbal$SAT_math, ylim = math_verbal$SAT_verbal)
+
+# 3(d)
+
+
+```
+
